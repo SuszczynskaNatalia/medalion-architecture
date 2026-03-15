@@ -188,5 +188,3 @@ Uwaga: W folderze data/ w repozytorium znajdują się tylko przykładowe pliki. 
 * `02_bronze_load_raw.sql`
 * `03_silver_transformations.sql`
 * `04_gold_aggregations.sql`
-
-```
