@@ -184,9 +184,9 @@ Uwaga: W folderze data/ w repozytorium znajdują się tylko przykładowe pliki. 
 
 3. Po zakończeniu pobierania i uploadu danych uruchom kolejno pliki SQL w Snowflake w następującej kolejności:
 
-01_create_database_and_schema.sql
-02_bronze_load_raw.sql
-03_silver_transformations.sql
-04_gold_aggregations.sql
+* `01_create_database_and_schema.sql`
+* `02_bronze_load_raw.sql`
+* `03_silver_transformations.sql`
+* `04_gold_aggregations.sql`
 
 ```
