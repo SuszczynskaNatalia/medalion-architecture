@@ -109,7 +109,7 @@ project_root/
 │   └─ 04_gold_aggregations.sql
 │
 ├─ data/                  # Katalog lokalny do pobieranych plików
-│   └─ *.parquet / taxi_zone_lookup.csv
+│   └─ *.parquet / taxi_zone_lookup.csv # W repozytorium znajdują się tylko przykładowe pliki
 │
 ├─ docs/                  # Opisane problemy z danymi
 │   └─ data_issues.md
@@ -175,13 +175,18 @@ Pliki są najpierw przesyłane do Snowflake Stage, a następnie ładowane do tab
 ---
 
 ## 8. Uruchamianie procesu
+Uwaga: W folderze data/ w repozytorium znajdują się tylko przykładowe pliki. Skrypt domyślnie pobiera pełne dane NYC Yellow Taxi dla roku 2023, 2024(ok. 10–12 GB). Parametry takie jak lata, miesiące i typ taxi można zmieniać w skrypcie, aby pobrać inne zestawy danych.
 
-8.1 Skonfiguruj plik .env z danymi do Snowflake.
-8.2 Uruchom skrypt Python, który pobiera dane i uploaduje je na stage: `python scripts/load_data.py`
-8.3 Po zakończeniu pobierania i uploadu danych uruchom kolejno pliki SQL w Snowflake w następującej kolejności:
-     01_create_database_and_schema.sql
-     02_bronze_load_raw.sql
-     03_silver_transformations.sql
-     04_gold_aggregations.sql
+1. Skonfiguruj plik `.env` z danymi do Snowflake.  
+2. Uruchom skrypt Python, który pobiera dane i uploaduje je na stage:  
+   ```bash
+   python scripts/load_data.py
+
+3. Po zakończeniu pobierania i uploadu danych uruchom kolejno pliki SQL w Snowflake w następującej kolejności:
+
+01_create_database_and_schema.sql
+02_bronze_load_raw.sql
+03_silver_transformations.sql
+04_gold_aggregations.sql
 
 ```
