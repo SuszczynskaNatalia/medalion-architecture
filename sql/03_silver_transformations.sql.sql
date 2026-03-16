@@ -89,9 +89,15 @@ WHERE coalesce(passenger_count, 0) > 0
 CREATE OR REPLACE TABLE silver.taxi_zones_clean AS
 SELECT
     LocationID,
-    UPPER(Borough) AS Borough,
-    UPPER(Zone) AS Zone,
-    UPPER(Service_zone) AS Service_zone,
+    CASE 
+        WHEN Zone = 'Outside of NYC' THEN 'OUTSIDE OF NYC'
+        ELSE UPPER(COALESCE(NULLIF(Borough,'N/A'),'UNKNOWN'))
+    END AS Borough,
+    UPPER(COALESCE(NULLIF(Zone,'N/A'),'UNKNOWN')) AS Zone,
+    CASE 
+        WHEN Zone = 'Outside of NYC' THEN 'OUTSIDE OF NYC'
+        ELSE UPPER(COALESCE(NULLIF(Service_zone,'N/A'),'UNKNOWN'))
+    END AS Service_zone,
     CURRENT_TIMESTAMP() AS load_timestamp
 FROM bronze.TAXI_ZONES
 WHERE LocationID IS NOT NULL;

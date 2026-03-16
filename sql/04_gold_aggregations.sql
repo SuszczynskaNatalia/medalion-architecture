@@ -1,5 +1,5 @@
 -- ========================================================
--- GOLD: Analiza przestrzenno-czasowa
+-- GOLD: Analiza przestrzenno-czasowa dla Przejazdów w NYC
 -- ========================================================
 CREATE OR REPLACE TABLE gold.yellow_taxi_revenue_by_zone_year_month AS
 SELECT
@@ -18,6 +18,8 @@ LEFT JOIN silver.taxi_zones_clean z_end ON t.DOLocationID = z_end.LocationID
 LEFT JOIN silver.calendar c ON t.pickup_date = c.calendar_date
 WHERE t.is_current = TRUE
   AND t.date_mismatch_flag = FALSE
+  AND z_start.LocationID not in (264, 256)
+  AND z_end.LocationID not in (264, 256)
 GROUP BY pickup_zone, dropoff_zone, c.year, c.month
 ORDER BY 1, 2, total_revenue DESC;
 
