@@ -99,22 +99,22 @@ Pozwala analizować:
 ```
 project_root/
 │
-├─ scripts/               # Skrypty Python
-│   └─ load_data.py       # Pobieranie i upload danych do Snowflake
+├─ scripts/                        # Skrypty Python
+│   └─ ingest_to_snowflake.py      # Pobieranie i upload danych do Snowflake
 │
-├─ sql/                   # Pliki SQL do budowy medalionowej architektury
+├─ sql/                            # Pliki SQL do budowy medalionowej architektury
 │   ├─ 01_create_database_and_schema.sql
 │   ├─ 02_bronze_load_raw.sql
 │   ├─ 03_silver_transformations.sql
 │   └─ 04_gold_aggregations.sql
 │
-├─ data/                  # Katalog lokalny do pobieranych plików
+├─ data/                           # Katalog lokalny do pobieranych plików
 │   └─ *.parquet / taxi_zone_lookup.csv # W repozytorium znajdują się tylko przykładowe pliki
 │
-├─ docs/                  # Opisane problemy z danymi
+├─ docs/                           # Opisane problemy z danymi
 │   └─ data_issues.md
 │
-└─ .env                   # Zmienne środowiskowe Snowflake
+└─ .env                            # Zmienne środowiskowe Snowflake
 ```
 
 ---
@@ -140,7 +140,7 @@ project_root/
 **Przykład użycia**:
 
 ```bash
-python scripts/load_data.py
+python scripts/ingest_to_snowflake.py
 ```
 
 ### 7.2 Pliki SQL (`sql/`)
@@ -180,7 +180,7 @@ Uwaga: W folderze data/ w repozytorium znajdują się tylko przykładowe pliki. 
 1. Skonfiguruj plik `.env` z danymi do Snowflake.  
 2. Uruchom skrypt Python, który pobiera dane i uploaduje je na stage:  
    ```bash
-   python scripts/load_data.py
+   python scripts/ingest_to_snowflake.py
 
 3. Po zakończeniu pobierania i uploadu danych uruchom kolejno pliki SQL w Snowflake w następującej kolejności:
 
