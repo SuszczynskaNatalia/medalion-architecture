@@ -113,6 +113,8 @@ project_root/
 │
 ├─ docs/                           # Opisane problemy z danymi
 │   └─ data_issues.md
+│   └─ architecture.png
+│   └─ silver_erd.png
 │
 └─ .env                            # Zmienne środowiskowe Snowflake
 ```
