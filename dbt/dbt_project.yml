@@ -1,0 +1,18 @@
+name: 'nyc_taxi_pipeline'
+version: '1.0.0'
+config-version: 2
+
+profile: 'nyc_taxi_profile'
+
+model-paths: ["models"]
+test-paths: ["tests"]
+
+models:
+  nyc_taxi_pipeline:
+    silver:
+      +materialized: table  # Domyślnie dla słowników
+      +schema: silver
+      
+    gold:
+      +materialized: incremental
+      +schema: gold

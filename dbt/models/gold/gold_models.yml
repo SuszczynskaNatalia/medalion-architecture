@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  # --------------------------------------------------------
+  # Agregacja przychodów według stref
+  # --------------------------------------------------------
+  - name: revenue_by_zone
+    description: "Przychody według strefy pickup/dropoff, roku i miesiąca"
+    columns:
+      - name: total_trips
+        description: "Liczba przejazdów w danej kombinacji strefa/rok/miesiąc"
+        tests:
+          - not_null
+
+      - name: total_revenue
+        description: "Suma przychodów (total_amount)"
+        tests:
+          - not_null
+
+  # --------------------------------------------------------
+  # Agregacja przychodów według vendora i płatności
+  # --------------------------------------------------------
+  - name: revenue_by_vendor_payment
+    description: "Przychody według vendora, typu płatności i taryfy"
+    columns:
+      - name: total_trips
+        tests:
+          - not_null
+
+      - name: total_revenue
+        tests:
+          - not_null

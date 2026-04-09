@@ -1,3 +1,13 @@
+# Provider do komunikacji Airflow ze Snowflake
+apache-airflow-providers-snowflake
+
+# Biblioteka do uruchamiania dbt jako osobnych tasków w Airflow
+astronomer-cosmos
+
+# Snowflake connector
 snowflake-connector-python
+
+# Dodatkowe
+pydantic
 requests
-dotenv
+python-dotenv

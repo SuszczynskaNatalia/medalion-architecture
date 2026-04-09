@@ -1,0 +1,27 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: "{{ env_var('SNOWFLAKE_DATABASE') }}" 
+    schema: "{{ env_var('SNOWFLAKE_SCHEMA') }}"
+    tables:
+      - name: yellow_taxi_raw
+        description: "Surowe dane o przejazdach Yellow Taxi z NYC Open Data"
+        columns:
+          - name: vendor_id
+            tests:
+              - not_null
+          - name: tpep_pickup_datetime
+            tests:
+              - not_null
+              
+      - name: taxi_zones 
+        description: "Słownik stref taksówkowych"
+        columns:
+          - name: LocationID
+            tests:
+              - unique
+              - not_null
+
+
+              

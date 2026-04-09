@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: yellow_taxi
+    description: "Oczyszczone i zdeduplikowane przejazdy Yellow Taxi (incremental)"
+    columns:
+      - name: trip_id
+        description: "Unikalny klucz wygenerowany przez MD5"
+        tests:
+          - unique
+          - not_null
+
+      - name: vendor_id
+        tests:
+          - not_null
+
+      - name: pickup_ts
+        tests:
+          - not_null
+
+      - name: total_amount
+        tests:
+          - not_null
+
+  # --------------------------------------------------------
+  # Wymiary (Dimensions) - słowniki
+  # --------------------------------------------------------
+  - name: dim_taxi_zones
+    description: "Słownik stref taksówkowych NYC"
+    columns:
+      - name: location_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_vendor
+    description: "Słownik dostawców usług taksówkowych"
+    columns:
+      - name: vendor_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_payment
+    description: "Słownik typów płatności"
+    columns:
+      - name: payment_type
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_calendar
+    description: "Kalendarz dat dla analiz czasowych"
+    columns:
+      - name: calendar_date
+        tests:
+          - unique
+          - not_null

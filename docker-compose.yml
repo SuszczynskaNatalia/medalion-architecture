@@ -1,0 +1,82 @@
+x-airflow-common: &airflow-common
+  build: .                          
+  env_file: .env                    
+  environment:
+    # Konfiguracja Airflow
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"       
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"  
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_SECRET_KEY}  
+
+    # Zmienne Snowflake przekazywane do dbt
+    SNOWFLAKE_ACCOUNT: ${SNOWFLAKE_ACCOUNT}
+    SNOWFLAKE_USER: ${SNOWFLAKE_USER}
+    SNOWFLAKE_PASSWORD: ${SNOWFLAKE_PASSWORD}
+    SNOWFLAKE_DATABASE: ${SNOWFLAKE_DATABASE}
+    SNOWFLAKE_SCHEMA: ${SNOWFLAKE_SCHEMA}
+    SNOWFLAKE_WAREHOUSE: ${SNOWFLAKE_WAREHOUSE}
+    SNOWFLAKE_ROLE: ${SNOWFLAKE_ROLE}
+
+    AIRFLOW_CONN_SNOWFLAKE_DEFAULT: "snowflake://${SNOWFLAKE_USER}:${SNOWFLAKE_PASSWORD}@/${SNOWFLAKE_SCHEMA}?account=${SNOWFLAKE_ACCOUNT}&database=${SNOWFLAKE_DATABASE}&role=${SNOWFLAKE_ROLE}&warehouse=${SNOWFLAKE_WAREHOUSE}"
+
+  volumes:
+    - ./dags:/opt/airflow/dags           
+    - ./dbt:/opt/airflow/dbt 
+    - ./logs:/opt/airflow/logs           
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+# ============================================================
+# Serwisy
+# ============================================================
+services:
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+
+  airflow-init:
+    <<: *airflow-common
+    command: bash -c "airflow db migrate && airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com"
+    restart: "no"                             
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: airflow webserver
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: airflow scheduler
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+# ============================================================
+# Wolumeny 
+# ============================================================
+volumes:
+  postgres_data:
+  logs:

@@ -1,0 +1,30 @@
+# Środowisko wirtualne
+venv/
+.venv/
+dbt_venv/
+
+# Pliki tymczasowe Pythona
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+data/*
+!data/.gitkeep
+
+# ==========================================
+# DBT (Data Build Tool) ARTIFACTS
+# ==========================================
+# Ignorujemy skompilowane pliki SQL, logi i pobrane paczki
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+
+# ==========================================
+# AIRFLOW & DOCKER ARTIFACTS
+# ==========================================
+logs/
+airflow.cfg
+webserver_config.py
+postgres-data/
+
