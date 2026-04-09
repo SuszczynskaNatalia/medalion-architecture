@@ -10,7 +10,9 @@ __pycache__/
 *.pyd
 
 data/*
-!data/.gitkeep
+touch data/.gitkeep
+
+.env
 
 # ==========================================
 # DBT (Data Build Tool) ARTIFACTS
