@@ -25,7 +25,8 @@ dbt/logs/
 # ==========================================
 # AIRFLOW & DOCKER ARTIFACTS
 # ==========================================
-logs/
+logs/*
+touch logs/.gitkeep
 airflow.cfg
 webserver_config.py
 postgres-data/
