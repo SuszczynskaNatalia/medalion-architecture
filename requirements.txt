@@ -7,6 +7,9 @@ astronomer-cosmos
 # Snowflake connector
 snowflake-connector-python
 
+# Kafka
+kafka-python
+
 # Dodatkowe
 pydantic
 requests

@@ -10,7 +10,7 @@ from cosmos.profiles import SnowflakeUserPasswordProfileMapping
 # KONFIGURACJA PROFILU DBT (COSMOS)
 # ======================================
 profile_config_main = ProfileConfig(
-    profile_name="default",
+    profile_name="nyc_taxi_profile",
     target_name="dev",
     profile_mapping=SnowflakeUserPasswordProfileMapping(
         conn_id="snowflake_default",  
@@ -34,7 +34,7 @@ with DAG(
     dag_id="nyc_taxi_end_to_end_pipeline",
     default_args=default_args,
     start_date=datetime(2026, 4, 1), 
-    schedule_interval="@daily",
+    schedule_interval=None,
     catchup=False,
     description="Kompletny ELT: Skrypt Python (Extract) -> SQLExecute (Load Bronze) -> dbt (Transform Silver/Gold)",
     tags=["nyc_taxi", "elt", "snowflake", "dbt"],

@@ -41,10 +41,18 @@ models:
           - unique
           - not_null
 
-  - name: dim_payment
+  - name: dim_payment_type
     description: "Słownik typów płatności"
     columns:
       - name: payment_type
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_ratecode
+    description: "Słownik kodów taryfowych"
+    columns:
+      - name: ratecode_id
         tests:
           - unique
           - not_null

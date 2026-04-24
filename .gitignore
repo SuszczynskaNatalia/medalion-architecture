@@ -10,7 +10,7 @@ __pycache__/
 *.pyd
 
 data/*
-touch data/.gitkeep
+!data/.gitkeep
 
 .env
 
@@ -26,8 +26,16 @@ dbt/logs/
 # AIRFLOW & DOCKER ARTIFACTS
 # ==========================================
 logs/*
-touch logs/.gitkeep
+!logs/.gitkeep
 airflow.cfg
 webserver_config.py
 postgres-data/
+
+# ==========================================
+# PLIKI LOKALNE / TYMCZASOWE
+# ==========================================
+*.duckdb
+*.duckdb.wal
+dbt/.user.yml
+_run_docker_test.py
 
