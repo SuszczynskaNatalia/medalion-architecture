@@ -1,29 +1,3 @@
-"""
-Streaming pipeline NYC Taxi: Kafka → Snowflake Stage → Bronze → dbt Silver/Gold.
-
-Identyczny przepływ danych jak nyc_taxi_end_to_end_pipeline (taxi_pipeline.py),
-z tą różnicą że źródłem triggera jest wiadomość Kafka zawierająca nazwę pliku.
-
-DAG 1 – taxi_streaming_http  (schedule=None, trigger ręczny / ad-hoc)
-    Wysyłasz wiadomość do Kafki, triggerujesz DAG z UI.
-    Brak wiadomości = task listen_kafka FAIL (zamierzone – trigger jest świadomy).
-
-DAG 2 – nyc_taxi_streaming_incremental  (schedule=timedelta(days=1), automatyczny)
-    Scheduler codziennie odpytuje Kafkę.
-    Jest wiadomość  → listen_kafka → upload_to_stage → load_bronze → dbt Silver/Gold
-    Brak wiadomości → check_message (ShortCircuitOperator) przerywa bez błędu.
-
-Przepływ po odebraniu pliku (oba DAG-i):
-    listen_kafka
-        ↓ XCom: filename
-    upload_to_stage   (taxi_streaming_cli.py upload <filename>)
-        – HTTP GET z TLC CloudFront
-        – PUT do @BRONZE.NYC_TAXI_INTERNAL_STAGE
-    setup_snowflake_environment   (SQL: create_database_and_schema.sql)
-    load_data_to_bronze           (SQL: bronze/load_raw.sql – COPY INTO)
-    transform_silver              (dbt DbtTaskGroup – modele silver)
-    transform_gold                (dbt DbtTaskGroup – modele gold)
-"""
 import os
 from datetime import datetime, timedelta
 
@@ -42,13 +16,13 @@ profile_config = ProfileConfig(
         conn_id="snowflake_default",
         profile_args={
             "database": os.getenv("SNOWFLAKE_DATABASE"),
-            "schema":   "PUBLIC",
+            "schema":   os.getenv("SNOWFLAKE_SCHEMA", "BRONZE"),
         },
     ),
 )
 
 default_args = {
-    "owner":        "data_engineer",
+    "owner":        "natalia.s",
     "retries":      1,
     "retry_delay":  timedelta(minutes=5),
 }
@@ -117,7 +91,13 @@ def _build_pipeline(dag: DAG, listen_bash: str) -> None:
         dag=dag,
     )
 
-    listen_kafka >> upload_to_stage >> setup_env >> load_bronze >> transform_silver >> transform_gold
+    export_csv = BashOperator(
+        task_id="export_gold_to_csv",
+        bash_command="python /opt/airflow/scripts/export_to_csv.py",
+        dag=dag,
+    )
+
+    listen_kafka >> setup_env >> upload_to_stage >> load_bronze >> transform_silver >> transform_gold >> export_csv
 
 
 # ── DAG 1 – ad-hoc (trigger ręczny) ──────────────────────────────────────────
@@ -194,4 +174,9 @@ with DAG(
         render_config=RenderConfig(select=["models/gold"]),
     )
 
-    listen_auto >> check_message >> upload_auto >> setup_auto >> load_auto >> silver_auto >> gold_auto
+    export_auto = BashOperator(
+        task_id="export_gold_to_csv",
+        bash_command="python /opt/airflow/scripts/export_to_csv.py",
+    )
+
+    listen_auto >> check_message >> setup_auto >> upload_auto >> load_auto >> silver_auto >> gold_auto >> export_auto

@@ -16,13 +16,13 @@ profile_config_main = ProfileConfig(
         conn_id="snowflake_default",  
         profile_args={
             "database": os.getenv("SNOWFLAKE_DATABASE"),
-            "schema": "PUBLIC",
+            "schema":   os.getenv("SNOWFLAKE_SCHEMA", "BRONZE"),
         },
     ),
 )
 
 default_args = {
-    "owner": "data_engineer",
+    "owner": "natalia.s",
     "retries": 1,
     "retry_delay": timedelta(minutes=5),
 }
@@ -86,7 +86,15 @@ with DAG(
         render_config=RenderConfig(select=["models/gold"]), 
     )
 
+    # -------------------------------------------------------------
+    # ETAP 5: EXPORT (Gold → CSV do data/exports/ w repo)
+    # -------------------------------------------------------------
+    export_csv = BashOperator(
+        task_id="export_gold_to_csv",
+        bash_command="python /opt/airflow/scripts/export_to_csv.py",
+    )
+
     # ======================================
     # PIPELINE
     # ======================================
-    run_setup_sql >> ingest_to_stage >> load_bronze_sql >> transform_silver >> transform_gold
+    run_setup_sql >> ingest_to_stage >> load_bronze_sql >> transform_silver >> transform_gold >> export_csv
