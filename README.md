@@ -44,6 +44,7 @@ Oczyszczanie i normalizacja:
 Agregacje analityczne zasilające BI:
 - `revenue_by_zone` – przychody według stref i czasu
 - `revenue_by_vendor_payment` – dystrybucja wg vendora i płatności
+- `dq_metrics` – automatyczny snapshot metryk jakości danych (obliczany przy każdym `dbt run`)
 
 ---
 
@@ -53,7 +54,7 @@ Agregacje analityczne zasilające BI:
 
 | `dag_id` | Trigger | Opis |
 |----------|---------|------|
-| `nyc_taxi_end_to_end_pipeline` | r�czny (`schedule=None`) | Pełny ELT: Python → Snowflake Stage → `COPY INTO` Bronze → dbt Silver → dbt Gold |
+| `nyc_taxi_end_to_end_pipeline` | ręczny (`schedule=None`) | Pełny ELT: Python → Snowflake Stage → `COPY INTO` Bronze → dbt Silver → dbt Gold |
 
 Kroki (kolejność w DAG-u):
 1. `setup_snowflake_environment` – `SQLExecuteQueryOperator`: DDL – tworzy bazę, schematy, tabele
@@ -61,6 +62,7 @@ Kroki (kolejność w DAG-u):
 3. `load_data_to_bronze` – `COPY INTO` z Stage do tabel Bronze
 4. `transform_silver` – `DbtTaskGroup` (Cosmos)
 5. `transform_gold` – `DbtTaskGroup` (Cosmos)
+6. `export_gold_to_csv` – `scripts/export_to_csv.py`: eksport tabel Gold do `data/exports/*.csv`
 
 ### Streaming pipeline – `dags/taxi_streaming_pipeline.py`
 
@@ -72,10 +74,11 @@ Kroki (kolejność w DAG-u):
 Kroki (oba DAG-i, po odebraniu `filename` z Kafki):
 1. `listen_kafka` – `taxi_streaming_cli.py listen` → filename na stdout (XCom)
 2. `check_message` *(tylko auto DAG)* – `ShortCircuitOperator`; pomija resztę jeśli brak wiadomości
-3. `upload_to_stage` – `taxi_streaming_cli.py upload <filename>`: HTTP + `PUT` Snowflake Stage
-4. `setup_snowflake_environment` – DDL Snowflake
+3. `setup_snowflake_environment` – DDL Snowflake (baza, schematy, Stage)
+4. `upload_to_stage` – `taxi_streaming_cli.py upload <filename>`: HTTP + `PUT` Snowflake Stage
 5. `load_data_to_bronze` – `COPY INTO` Bronze
 6. `transform_silver` / `transform_gold` – dbt via Cosmos
+7. `export_gold_to_csv` – `scripts/export_to_csv.py`: eksport tabel Gold do `data/exports/*.csv`
 
 ### Skrypt CLI – `dags/taxi_streaming_cli.py`
 
@@ -155,7 +158,28 @@ Domyślny bootstrap hosta: `localhost:9094`. Kafka w kontenerach Airflow używa 
 
 ---
 
-## 7. Zmienne środowiskowe (`.env`)
+## 7. Pobieranie danych (CSV export)
+
+Gotowe snapshoty tabel Gold są dostępne bezpośrednio w repozytorium — bez potrzeby dostępu do Snowflake:
+
+| Plik | Zawartość |
+|------|-----------|
+| [`data/exports/revenue_by_zone.csv`](data/exports/revenue_by_zone.csv) | Przychody według strefy pickup/dropoff |
+| [`data/exports/revenue_by_vendor_payment.csv`](data/exports/revenue_by_vendor_payment.csv) | Przychody według dostawcy i typu płatności |
+| [`data/exports/dq_metrics_latest.csv`](data/exports/dq_metrics_latest.csv) | Ostatni snapshot metryk jakości danych |
+| [`data/exports/_export_manifest.txt`](data/exports/_export_manifest.txt) | Data eksportu i liczba wierszy |
+
+Aby odświeżyć pliki po nowym uruchomieniu pipeline:
+
+```bash
+python scripts/export_to_csv.py
+```
+
+Skrypt łączy się z Snowflake (wymaga `.env`), pobiera dane z `GOLD.*` i nadpisuje pliki CSV w `data/exports/`.
+
+---
+
+## 7b. Zmienne środowiskowe (`.env`)
 
 Wzorzec: `.env.example`
 
@@ -174,6 +198,7 @@ Wzorzec: `.env.example`
 
 ## 8. Struktura katalogów
 
+
 ```text
 taxi_project/
 ├── dags/
@@ -181,21 +206,33 @@ taxi_project/
 │   │   ├── bronze/load_raw.sql              # COPY INTO Bronze (Snowflake)
 │   │   └── setup/create_database_and_schema.sql
 │   ├── ingest_to_snowflake.py               # HTTP → Snowflake Stage (batch)
-│   ├── taxi_pipeline.py                     # DAG batch (trigger r�czny)
+│   ├── taxi_pipeline.py                     # DAG batch (trigger ręczny)
 │   ├── taxi_streaming_cli.py                # CLI: Kafka listen + Snowflake upload
 │   └── taxi_streaming_pipeline.py           # DAG streaming (ad-hoc + automatyczny)
 ├── dbt/
 │   ├── models/
 │   │   ├── silver/                          # Oczyszczanie i normalizacja
-│   │   └── gold/                            # Agregacje analityczne
+│   │   └── gold/
+│   │       ├── revenue_by_zone.sql          # Przychody wg stref
+│   │       ├── revenue_by_vendor_payment.sql
+│   │       └── dq_metrics.sql               # Automatyczne metryki jakości danych
 │   ├── tests/                               # Testy Data Quality
 │   ├── dbt_project.yml
 │   └── profiles.yml                         # Połączenie dbt → Snowflake
 ├── scripts/
-│   └── kafka_producer.py                    # Wysyłanie wiadomości do Kafki (testowanie)
+│   ├── kafka_producer.py                    # Wysyłanie wiadomości do Kafki
+│   └── export_to_csv.py                     # Eksport tabel Gold (Snowflake → CSV)
+├── data/
+│   └── exports/                             # Snapshoty CSV do pobrania z GitHub
+│       ├── revenue_by_zone.csv
+│       ├── revenue_by_vendor_payment.csv
+│       ├── dq_metrics_latest.csv
+│       └── _export_manifest.txt
 ├── docs/
-│   ├── architecture.png
-│   └── erd_silver.png
+│   ├── architecture.png                     # Diagram architektury
+│   ├── erd_silver.png                       # ERD warstwy Silver
+│   └── NYC_Taxi_Data_Product_Card.odt       # Karta produktu danych (MS Teams)
+├── data_product_contract.yaml               # Kontrakt produktu danych
 ├── logs/
 ├── Dockerfile                               # Obraz Airflow + dbt_venv
 ├── docker-compose.yml                       # Cały stack (Airflow, Kafka, Postgres)

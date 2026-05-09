@@ -11,6 +11,8 @@ __pycache__/
 
 data/*
 !data/.gitkeep
+!data/exports/
+!data/exports/**
 
 .env
 
@@ -38,4 +40,20 @@ postgres-data/
 *.duckdb.wal
 dbt/.user.yml
 _run_docker_test.py
+
+# Skrypty do lokalnego testowania (bez Snowflake / jednorazowe)
+scripts/_*.py
+
+# Szablony robocze ODT
+__Data_Product_Card_Template__.odt
+
+# dbt auto-generuje pusty README przy inicjalizacji projektu
+dbt/README.md
+
+# Tymczasowe pliki blokady MS Office / LibreOffice
+~$*
+
+# Wersje pośrednie kart ODT (śledzimy tylko finalną w docs/)
+docs/*_v[0-9]*.odt
+docs/*_v[0-9][0-9]*.odt
 
