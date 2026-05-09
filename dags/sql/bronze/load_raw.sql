@@ -28,7 +28,8 @@ CREATE TABLE IF NOT EXISTS bronze.yellow_taxi_raw (
     total_amount FLOAT,
     congestion_surcharge FLOAT,
     airport_fee FLOAT,
-    source_file STRING               -- plik, z którego pochodzi rekord
+    source_file STRING,                              -- plik źródłowy
+    load_ts  TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP() -- czas załadowania (freshness)
 );
 
 
