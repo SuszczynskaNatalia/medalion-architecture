@@ -2,11 +2,16 @@ version: 2
 
 sources:
   - name: bronze
-    database: "{{ env_var('SNOWFLAKE_DATABASE') }}" 
+    database: "{{ env_var('SNOWFLAKE_DATABASE') }}"
     schema: "{{ env_var('SNOWFLAKE_SCHEMA') }}"
     tables:
       - name: yellow_taxi_raw
         description: "Surowe dane o przejazdach Yellow Taxi z NYC Open Data"
+        config:
+          loaded_at_field: load_ts
+          freshness:
+            warn_after:  { count: 25, period: hour }
+            error_after: { count: 48, period: hour }
         columns:
           - name: vendor_id
             tests:

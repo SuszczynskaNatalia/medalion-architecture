@@ -30,3 +30,37 @@ models:
       - name: total_revenue
         tests:
           - not_null
+
+  # --------------------------------------------------------
+  # Metryki jakości danych (automatycznie aktualizowane)
+  # --------------------------------------------------------
+  - name: dq_metrics
+    description: >
+      Snapshot metryk jakości danych obliczany automatycznie przy każdym uruchomieniu dbt.
+      Każdy run dodaje 5 wierszy (po jednym na metrykę) z tym samym znacznikiem run_at.
+    columns:
+      - name: run_at
+        description: "Znacznik czasu uruchomienia dbt (identyczny dla wszystkich metryk jednego runu)"
+        tests:
+          - not_null
+
+      - name: metric_name
+        description: "Nazwa metryki DQ"
+        tests:
+          - not_null
+
+      - name: current_value
+        description: "Obliczona wartość metryki"
+
+      - name: unit
+        description: "Jednostka metryki: %, rows, hours"
+
+      - name: threshold
+        description: "Próg akceptowalności (NULL = tylko informacyjnie)"
+
+      - name: status
+        description: "Wynik oceny: PASS / FAIL / WARN / INFO"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['PASS', 'FAIL', 'WARN', 'INFO']
