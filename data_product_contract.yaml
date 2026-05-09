@@ -1,0 +1,286 @@
+# ============================================================
+# Data Product Contract — NYC Yellow Taxi Analytics
+# ============================================================
+product_name: "NYC Yellow Taxi Analytics"
+product_owner: "[YOUR NAME]"         # TODO: fill in before publishing
+contact: "[your-email@pjatk.edu.pl]" # TODO: fill in before publishing
+version: "1.0.0"
+last_updated: "2026-05-08"
+status: "production-like"
+
+purpose: >
+  Cleaned and aggregated trip data for NYC Yellow Taxi (2023–2024).
+  Enables analysis of revenue patterns, vendor performance, demand trends,
+  and payment behaviour across NYC taxi zones.
+  Supports decisions around pricing strategies, driver allocation,
+  and zone-level revenue analysis without requiring consumers to handle
+  raw Parquet files or bespoke transformation logic.
+
+# ── Data Sources ────────────────────────────────────────────
+data_sources:
+  - name: "NYC TLC Trip Record Data"
+    url: "https://d37ci6vzurychx.cloudfront.net/trip-data/"
+    format: Parquet
+    cadence: "Monthly (batch ingestion)"
+    years_covered: [2023, 2024]
+
+  - name: "TLC Taxi Zone Lookup"
+    url: "https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv"
+    format: CSV
+    cadence: "One-time / manual re-ingestion"
+
+  - name: "Apache Kafka — nyc_taxi_events"
+    format: "JSON event stream"
+    cadence: "Daily (streaming ingestion)"
+    message_schema: '{"filename": "yellow_tripdata_YYYY-MM.parquet"}'
+
+# ── Pipeline ────────────────────────────────────────────────
+pipeline:
+  orchestration: "Apache Airflow 2.9 (Docker, LocalExecutor)"
+  transformation: "dbt Core + Astronomer Cosmos"
+  warehouse: "Snowflake"
+  layers:
+    bronze: "Raw COPY INTO from Snowflake Stage (Parquet / CSV)"
+    silver: "Cleaned, deduplicated, typed (dbt incremental models)"
+    gold:   "Monthly aggregations for BI (dbt incremental + merge)"
+
+  dags:
+    - id: "nyc_taxi_end_to_end_pipeline"
+      schedule: "manual (schedule=None)"
+      description: "Full batch backfill: ingest → Bronze → Silver → Gold"
+
+    - id: "taxi_streaming_http"
+      schedule: "manual (schedule=None)"
+      description: "Ad-hoc streaming: single Kafka message → Snowflake Stage → Bronze → dbt"
+
+    - id: "nyc_taxi_streaming_incremental"
+      schedule: "daily (timedelta(days=1))"
+      description: "Automated daily: Kafka listen → skip if empty → Stage → Bronze → dbt"
+
+# ── Access ──────────────────────────────────────────────────
+access:
+  type: "Snowflake SQL"
+  database: "TAXI_PROJECT"
+  schemas:
+    silver: "SILVER"
+    gold: "GOLD"
+
+  primary_tables:
+    - "SILVER.YELLOW_TAXI"
+    - "GOLD.REVENUE_BY_ZONE"
+    - "GOLD.REVENUE_BY_VENDOR_PAYMENT"
+    - "GOLD.DQ_METRICS"
+
+  example_queries:
+    revenue_by_zone: |
+      SELECT pickup_zone,
+             SUM(total_revenue)  AS revenue,
+             SUM(total_trips)    AS trips
+      FROM TAXI_PROJECT.GOLD.REVENUE_BY_ZONE
+      WHERE year = 2024 AND month <= 3
+      GROUP BY pickup_zone
+      ORDER BY revenue DESC
+      LIMIT 20;
+
+    vendor_payment_breakdown: |
+      SELECT vendor_name, payment_name,
+             SUM(total_revenue) AS revenue,
+             SUM(total_trips)   AS trips
+      FROM TAXI_PROJECT.GOLD.REVENUE_BY_VENDOR_PAYMENT
+      WHERE year = 2024
+      GROUP BY vendor_name, payment_name
+      ORDER BY revenue DESC;
+
+    sample_trips: |
+      SELECT trip_id, vendor_id, pickup_ts, trip_distance,
+             total_amount, payment_type, PULocationID, DOLocationID
+      FROM TAXI_PROJECT.SILVER.YELLOW_TAXI
+      LIMIT 100;
+
+# ── Schema ──────────────────────────────────────────────────
+schema:
+
+  SILVER.YELLOW_TAXI:
+    description: "Cleaned and deduplicated NYC Yellow Taxi trips (incremental model)"
+    columns:
+      trip_id:
+        type: STRING
+        description: "MD5 unique key derived from vendor_id + timestamps + source_file"
+        example: "a3f2b1c4d5e6f7a8b9c0d1e2f3a4b5c6"
+        tests: [unique, not_null]
+
+      vendor_id:
+        type: INT
+        description: "Taxi company ID. 1=Creative Mobile, 2=Curb Mobility, 999=Unknown"
+        example: 1
+        tests: [not_null]
+
+      pickup_ts:
+        type: TIMESTAMP_NTZ
+        description: "Pickup datetime — epoch microseconds from Parquet converted to NTZ"
+        example: "2024-03-15 08:23:00"
+        tests: [not_null]
+
+      pickup_date:
+        type: DATE
+        description: "Pickup date (derived from pickup_ts)"
+        example: "2024-03-15"
+
+      dropoff_date:
+        type: DATE
+        description: "Dropoff date (derived from dropoff_ts)"
+        example: "2024-03-15"
+
+      passenger_count:
+        type: INT
+        description: "Number of passengers. Filtered: > 0 in Silver"
+        example: 2
+
+      trip_distance:
+        type: FLOAT
+        description: "Trip distance in miles. Filtered: > 0 in Silver"
+        example: 3.2
+
+      total_amount:
+        type: FLOAT
+        description: "Total amount charged to passenger in USD"
+        example: 14.50
+        tests: [not_null]
+
+      fare_amount:
+        type: FLOAT
+        description: "Base fare in USD (negative values set fare_correction=TRUE)"
+        example: 10.00
+
+      tip_amount:
+        type: FLOAT
+        description: "Tip amount in USD"
+        example: 2.50
+
+      payment_type:
+        type: INT
+        description: "1=Credit card, 2=Cash, 3=No charge, 4=Dispute, 5=Unknown"
+        example: 1
+
+      PULocationID:
+        type: INT
+        description: "Pickup taxi zone ID — join with SILVER.DIM_TAXI_ZONES"
+        example: 161
+
+      DOLocationID:
+        type: INT
+        description: "Dropoff taxi zone ID — join with SILVER.DIM_TAXI_ZONES"
+        example: 237
+
+      fare_correction:
+        type: BOOLEAN
+        description: "TRUE if fare_amount or total_amount < 0 (billing anomaly flag)"
+        example: false
+
+      date_mismatch_flag:
+        type: BOOLEAN
+        description: "TRUE if pickup_date > dropoff_date (data quality flag)"
+        example: false
+
+      source_file:
+        type: STRING
+        description: "Name of the Parquet file this record was loaded from"
+        example: "yellow_tripdata_2024-03.parquet"
+
+  GOLD.REVENUE_BY_ZONE:
+    description: "Monthly revenue aggregated by pickup/dropoff zone pair"
+    unique_key: [year, month, pickup_zone, dropoff_zone]
+    columns:
+      year:          { type: INT,    example: 2024 }
+      month:         { type: INT,    example: 3 }
+      pickup_zone:   { type: STRING, example: "Midtown Center" }
+      dropoff_zone:  { type: STRING, example: "JFK Airport" }
+      total_trips:   { type: INT,    example: 1240 }
+      total_revenue: { type: FLOAT,  example: 18750.50 }
+      total_tips:    { type: FLOAT,  example: 2340.00 }
+      avg_trip_distance: { type: FLOAT, example: 4.7 }
+      total_corrections: { type: INT, example: 3, description: "Rows with fare_amount < 0" }
+      max_pickup_ts: { type: TIMESTAMP_NTZ, description: "Used as incremental watermark" }
+
+  GOLD.REVENUE_BY_VENDOR_PAYMENT:
+    description: "Monthly revenue aggregated by vendor and payment type"
+    unique_key: [year, month, vendor_id, payment_type]
+    columns:
+      year:         { type: INT,    example: 2024 }
+      month:        { type: INT,    example: 3 }
+      vendor_id:    { type: INT,    example: 1 }
+      vendor_name:  { type: STRING, example: "Creative Mobile Technologies, LLC" }
+      payment_type: { type: INT,    example: 1 }
+      payment_name: { type: STRING, example: "Credit card" }
+      total_trips:  { type: INT,    example: 8500 }
+      total_revenue: { type: FLOAT, example: 95000.00 }
+      total_tips:   { type: FLOAT,  example: 12000.00 }
+      avg_fare:     { type: FLOAT,  example: 10.20 }
+      total_corrections: { type: INT, example: 12 }
+      max_pickup_ts: { type: TIMESTAMP_NTZ }
+
+# ── Quality Metrics ─────────────────────────────────────────
+quality_metrics:
+
+  - name: "Uniqueness — trip_id"
+    definition: "% of unique trip_id values in SILVER.YELLOW_TAXI"
+    current_value: "100%"
+    expected_threshold: "100%"
+    cadence: "Every pipeline run"
+    implementation: "dbt test: unique on trip_id column"
+
+  - name: "Completeness — pickup_ts"
+    definition: "% of rows where pickup_ts IS NOT NULL in SILVER.YELLOW_TAXI"
+    current_value: "> 99%"
+    expected_threshold: "> 99%"
+    cadence: "Every pipeline run"
+    implementation: "dbt test: not_null on pickup_ts; also enforced by WHERE filter in yellow_taxi.sql"
+
+  - name: "Validity — fare math check"
+    definition: "% of rows where |total_amount - (fare + extra + mta_tax + tip + tolls + improvement)| <= 0.50"
+    current_value: "> 99.5%"
+    expected_threshold: "> 99.5%"
+    cadence: "Every pipeline run"
+    implementation: "dbt singular test: dbt/tests/assert_total_amount_math_silver.sql (severity: warn)"
+
+  - name: "Validity — positive trip distance"
+    definition: "% of rows where trip_distance > 0"
+    current_value: "100%"
+    expected_threshold: "100%"
+    cadence: "Every pipeline run"
+    implementation: "Enforced by WHERE clause in dbt/models/silver/yellow_taxi.sql"
+
+  - name: "Freshness — Silver layer"
+    definition: "Hours elapsed since the most recent valid_from timestamp in SILVER.YELLOW_TAXI"
+    current_value: "< 25h (daily streaming DAG)"
+    expected_threshold: "warn after 25h, error after 48h"
+    cadence: "Daily"
+    implementation: "dbt source freshness on bronze.yellow_taxi_raw (loaded_at_field: valid_from)"
+
+# ── Refresh & Operations ─────────────────────────────────────
+refresh:
+  frequency: "Daily (streaming) / On-demand (batch backfill)"
+  trigger: "Apache Airflow Scheduler (streaming) / Manual UI trigger (batch)"
+  storage: "Snowflake Cloud — TAXI_PROJECT database"
+  typical_volume: "~150,000–400,000 rows per monthly Parquet file"
+  dependencies:
+    - "TLC CloudFront HTTPS endpoint (d37ci6vzurychx.cloudfront.net)"
+    - "Apache Kafka topic nyc_taxi_events (Docker)"
+    - "Snowflake Warehouse COMPUTE_WH"
+
+# ── Known Limitations ────────────────────────────────────────
+known_limitations:
+  - "Data covers 2023–2024 only — extend by changing YEARS in dags/ingest_to_snowflake.py"
+  - "Records with passenger_count=0 or trip_distance=0 are excluded in Silver (intended filtering)"
+  - "Timestamps are stored as epoch microseconds in Bronze and converted in Silver — raw Bronze is not human-readable"
+  - "fare_correction=TRUE rows are present in Silver but excluded from Gold aggregations (date_mismatch_flag=FALSE filter)"
+  - "Kafka streaming requires a manual producer message per file — TLC does not push events automatically"
+  - "Gold models aggregate by calendar month; intra-month granularity requires querying Silver directly"
+
+# ── Governance ───────────────────────────────────────────────
+governance:
+  access_policy: "Public for PJATK Big Data course students"
+  marketplace_location: "MS Teams / Data Marketplace folder"
+  git_repository: "https://github.com/[YOUR_USERNAME]/taxi_project"
+  contract_file: "data_product_contract.yaml (this file)"
+  feedback: "Open a GitHub issue or contact the owner via MS Teams"

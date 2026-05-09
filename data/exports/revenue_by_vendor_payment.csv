@@ -1,0 +1,155 @@
+year,month,vendor_id,vendor_name,payment_type,payment_name,total_trips,total_revenue,total_tips,avg_fare,total_corrections
+2001,1,2,"Curb Mobility, LLC",1,Credit card,3,188.66,23.46,47.9667,0
+2001,1,2,"Curb Mobility, LLC",2,Cash,3,149.0,0.0,43.0667,0
+2002,12,2,"Curb Mobility, LLC",1,Credit card,9,585.67,92.17,44.3889,0
+2002,12,2,"Curb Mobility, LLC",2,Cash,9,328.5,0.0,31.5222,0
+2002,12,2,"Curb Mobility, LLC",3,No charge,2,0.0,0.0,0.0,1
+2003,1,2,"Curb Mobility, LLC",2,Cash,4,318.08,0.0,70.3,0
+2003,1,2,"Curb Mobility, LLC",1,Credit card,2,136.0,27.2,51.65,0
+2008,12,2,"Curb Mobility, LLC",1,Credit card,17,1106.9,151.56,47.2235,0
+2008,12,2,"Curb Mobility, LLC",2,Cash,9,264.05,0.0,23.6111,0
+2009,1,2,"Curb Mobility, LLC",2,Cash,12,464.87,0.0,31.025,0
+2009,1,2,"Curb Mobility, LLC",1,Credit card,8,228.46,39.87,17.175,0
+2014,11,2,"Curb Mobility, LLC",1,Credit card,1,52.38,8.73,33.1,0
+2023,1,2,"Curb Mobility, LLC",1,Credit card,6,184.97,16.27,21.9833,0
+2023,1,2,"Curb Mobility, LLC",2,Cash,2,30.0,0.0,10.0,0
+2023,2,2,"Curb Mobility, LLC",1,Credit card,1668941,47594704.68,7101295.36,18.7291,9
+2023,2,1,"Creative Mobile Technologies, LLC",1,Credit card,583795,15667001.16,2264243.99,17.5964,0
+2023,2,2,"Curb Mobility, LLC",2,Cash,343961,8033577.33,709.51,18.3584,5192
+2023,2,1,"Creative Mobile Technologies, LLC",2,Cash,116432,2567866.51,23.66,17.0277,0
+2023,2,1,"Creative Mobile Technologies, LLC",3,No charge,6250,142288.82,3.38,17.6409,0
+2023,2,1,"Creative Mobile Technologies, LLC",4,Dispute,2420,55144.87,7.0,17.7474,0
+2023,2,2,"Curb Mobility, LLC",4,Dispute,26444,1210.72,1368.92,-0.0042,13227
+2023,2,2,"Curb Mobility, LLC",3,No charge,6496,19.63,69.43,-0.0044,3250
+2023,3,2,"Curb Mobility, LLC",1,Credit card,1926729,56934653.74,8520564.64,19.4662,22
+2023,3,1,"Creative Mobile Technologies, LLC",1,Credit card,695257,19270861.32,2780543.97,18.2543,0
+2023,3,2,"Curb Mobility, LLC",2,Cash,404739,9739633.25,932.63,18.9646,6303
+2023,3,1,"Creative Mobile Technologies, LLC",2,Cash,140639,3174355.15,46.69,17.4451,0
+2023,3,1,"Creative Mobile Technologies, LLC",3,No charge,7453,178345.75,0.0,18.6998,0
+2023,3,1,"Creative Mobile Technologies, LLC",4,Dispute,3160,74422.09,5.6,18.3561,0
+2023,3,2,"Curb Mobility, LLC",4,Dispute,31576,1131.18,1537.83,-0.0107,15794
+2023,3,1,"Creative Mobile Technologies, LLC",5,Unknown,1,0.0,0.0,0.0,0
+2023,3,2,"Curb Mobility, LLC",3,No charge,7514,-319.13,313.37,-0.0642,3771
+2023,4,2,"Curb Mobility, LLC",1,Credit card,1857275,55714998.26,8337424.29,19.8599,16
+2023,4,1,"Creative Mobile Technologies, LLC",1,Credit card,646970,18172537.18,2620962.42,18.5866,0
+2023,4,2,"Curb Mobility, LLC",2,Cash,412540,10288643.98,782.69,19.7617,6185
+2023,4,1,"Creative Mobile Technologies, LLC",2,Cash,137554,3210456.79,59.07,18.1673,0
+2023,4,1,"Creative Mobile Technologies, LLC",3,No charge,7035,172101.41,14.45,19.1175,0
+2023,4,1,"Creative Mobile Technologies, LLC",4,Dispute,3015,75825.41,8.33,19.8491,0
+2023,4,2,"Curb Mobility, LLC",4,Dispute,32374,1277.21,1385.01,-0.0028,16188
+2023,4,2,"Curb Mobility, LLC",3,No charge,7847,117.56,194.71,-0.0091,3924
+2023,5,2,"Curb Mobility, LLC",1,Credit card,2006122,61567423.78,9180959.19,20.3757,10
+2023,5,1,"Creative Mobile Technologies, LLC",1,Credit card,682782,19625940.96,2826358.54,19.0798,0
+2023,5,2,"Curb Mobility, LLC",2,Cash,427081,10850439.21,804.02,20.1799,6477
+2023,5,1,"Creative Mobile Technologies, LLC",2,Cash,140841,3363449.95,53.4,18.6531,0
+2023,5,1,"Creative Mobile Technologies, LLC",3,No charge,7349,177381.37,0.0,18.8247,0
+2023,5,1,"Creative Mobile Technologies, LLC",4,Dispute,3136,81430.25,0.0,20.479,0
+2023,5,2,"Curb Mobility, LLC",4,Dispute,35115,1558.32,1578.92,-0.0004,17558
+2023,5,2,"Curb Mobility, LLC",3,No charge,7732,174.76,176.86,-0.0003,3866
+2023,6,2,"Curb Mobility, LLC",1,Credit card,1890019,58026045.46,8621779.47,20.3822,9
+2023,6,1,"Creative Mobile Technologies, LLC",1,Credit card,637920,18247254.15,2622978.01,18.9724,0
+2023,6,2,"Curb Mobility, LLC",2,Cash,399507,10096609.23,849.62,20.0488,6647
+2023,6,1,"Creative Mobile Technologies, LLC",2,Cash,132909,3552654.22,93.57,21.4867,0
+2023,6,1,"Creative Mobile Technologies, LLC",3,No charge,7607,190134.22,18.05,19.6832,0
+2023,6,1,"Creative Mobile Technologies, LLC",4,Dispute,3190,80446.15,7.96,19.8784,0
+2023,6,2,"Curb Mobility, LLC",4,Dispute,34236,2010.68,1939.88,0.002,17118
+2023,6,2,"Curb Mobility, LLC",3,No charge,7335,80.46,92.36,-0.0011,3668
+2023,7,2,"Curb Mobility, LLC",1,Credit card,1646667,50069251.8,7379321.14,20.2268,11
+2023,7,1,"Creative Mobile Technologies, LLC",1,Credit card,527723,14988944.01,2131287.06,18.9047,0
+2023,7,2,"Curb Mobility, LLC",2,Cash,392863,9915159.44,833.24,20.0398,6832
+2023,7,1,"Creative Mobile Technologies, LLC",2,Cash,122599,2923298.44,30.2,18.6242,0
+2023,7,1,"Creative Mobile Technologies, LLC",3,No charge,6603,164667.24,17.3,19.6472,0
+2023,7,1,"Creative Mobile Technologies, LLC",4,Dispute,3168,80164.78,0.0,19.9662,0
+2023,7,2,"Curb Mobility, LLC",4,Dispute,33783,1727.26,1736.36,-0.0002,16892
+2023,7,2,"Curb Mobility, LLC",3,No charge,7418,196.17,196.17,0.0,3709
+2023,8,2,"Curb Mobility, LLC",1,Credit card,1595761,48663343.9,7170601.91,20.1963,12
+2023,8,1,"Creative Mobile Technologies, LLC",1,Credit card,503486,14269039.65,2000987.86,18.8497,0
+2023,8,2,"Curb Mobility, LLC",2,Cash,388482,9962799.64,776.39,20.3503,6708
+2023,8,1,"Creative Mobile Technologies, LLC",2,Cash,118128,2844879.14,24.33,18.7805,0
+2023,8,1,"Creative Mobile Technologies, LLC",3,No charge,6101,151629.84,46.75,19.4561,0
+2023,8,1,"Creative Mobile Technologies, LLC",4,Dispute,2940,74877.36,0.0,20.1691,0
+2023,8,2,"Curb Mobility, LLC",4,Dispute,34960,1830.2,1830.2,-0.0,17480
+2023,8,2,"Curb Mobility, LLC",3,No charge,7262,61.81,61.81,0.0,3631
+2023,9,2,"Curb Mobility, LLC",1,Credit card,1647217,51815941.86,7688585.65,20.9857,9
+2023,9,1,"Creative Mobile Technologies, LLC",1,Credit card,495866,14534700.46,2073073.51,19.6249,0
+2023,9,2,"Curb Mobility, LLC",2,Cash,341245,8891223.84,882.62,20.8056,6496
+2023,9,1,"Creative Mobile Technologies, LLC",2,Cash,99427,2783678.64,29.36,22.7311,0
+2023,9,1,"Creative Mobile Technologies, LLC",3,No charge,5727,148486.64,17.44,20.5977,0
+2023,9,1,"Creative Mobile Technologies, LLC",4,Dispute,2651,68880.77,8.14,20.6119,0
+2023,9,2,"Curb Mobility, LLC",4,Dispute,32737,1774.23,1861.98,-0.0026,16369
+2023,9,2,"Curb Mobility, LLC",3,No charge,6556,131.59,130.89,0.0001,3278
+2023,10,2,"Curb Mobility, LLC",1,Credit card,2071755,64210214.04,9592380.2,20.5677,15
+2023,10,1,"Creative Mobile Technologies, LLC",1,Credit card,618462,17933224.63,2578749.17,19.3385,0
+2023,10,2,"Curb Mobility, LLC",2,Cash,407158,10314767.32,940.42,20.1167,8378
+2023,10,1,"Creative Mobile Technologies, LLC",2,Cash,120378,2906079.56,31.72,18.9009,0
+2023,10,1,"Creative Mobile Technologies, LLC",3,No charge,6838,169524.35,32.45,19.4555,0
+2023,10,1,"Creative Mobile Technologies, LLC",4,Dispute,3279,82402.84,0.0,19.9581,0
+2023,10,2,"Curb Mobility, LLC",4,Dispute,41218,2339.26,2462.05,-0.0026,20601
+2023,10,2,"Curb Mobility, LLC",3,No charge,8246,140.69,140.69,0.0,4123
+2023,11,2,"Curb Mobility, LLC",1,Credit card,1980968,60482932.09,9072975.71,20.2134,13
+2023,11,1,"Creative Mobile Technologies, LLC",1,Credit card,594955,16988413.25,2453535.23,18.9947,0
+2023,11,2,"Curb Mobility, LLC",2,Cash,379199,9363114.8,850.34,19.56,8248
+2023,11,1,"Creative Mobile Technologies, LLC",2,Cash,111776,2634517.02,14.12,18.3807,0
+2023,11,1,"Creative Mobile Technologies, LLC",3,No charge,6569,155212.01,5.55,18.4718,0
+2023,11,1,"Creative Mobile Technologies, LLC",4,Dispute,3377,81342.24,0.0,18.8902,0
+2023,11,2,"Curb Mobility, LLC",4,Dispute,40734,2180.7,2180.7,-0.0,20353
+2023,11,2,"Curb Mobility, LLC",3,No charge,8496,156.27,141.57,0.0017,4242
+2023,12,2,"Curb Mobility, LLC",1,Credit card,1919211,58431249.09,8804921.63,20.1551,21
+2023,12,1,"Creative Mobile Technologies, LLC",1,Credit card,600115,17046913.35,2473859.97,18.9057,0
+2023,12,2,"Curb Mobility, LLC",2,Cash,406056,10086712.3,1064.47,19.6872,8942
+2023,12,1,"Creative Mobile Technologies, LLC",2,Cash,122570,2894312.26,50.05,18.4321,0
+2023,12,1,"Creative Mobile Technologies, LLC",3,No charge,7134,170390.64,31.23,18.6849,0
+2023,12,1,"Creative Mobile Technologies, LLC",4,Dispute,3700,89963.52,5.65,19.2491,0
+2023,12,2,"Curb Mobility, LLC",4,Dispute,44683,2106.81,2217.46,-0.0023,22341
+2023,12,2,"Curb Mobility, LLC",3,No charge,9201,332.93,355.73,-0.0018,4601
+2024,1,2,"Curb Mobility, LLC",1,Credit card,1740077,49624996.53,7437767.42,18.6175,20
+2024,1,1,"Creative Mobile Technologies, LLC",1,Credit card,533553,14265571.55,2017275.43,17.671,0
+2024,1,2,"Curb Mobility, LLC",2,Cash,328582,7667123.89,877.39,18.2926,7663
+2024,1,1,"Creative Mobile Technologies, LLC",2,Cash,97081,2115858.08,23.08,16.6951,0
+2024,1,1,"Creative Mobile Technologies, LLC",3,No charge,5504,119927.64,4.5,16.7051,0
+2024,1,1,"Creative Mobile Technologies, LLC",4,Dispute,2762,67042.11,5.0,19.1056,0
+2024,1,2,"Curb Mobility, LLC",4,Dispute,39910,1818.79,1818.79,0.0,19955
+2024,1,2,"Curb Mobility, LLC",3,No charge,8762,236.26,236.26,0.0,4380
+2024,2,2,"Curb Mobility, LLC",1,Credit card,1758627,49917705.58,7478579.16,18.5054,21
+2024,2,1,"Creative Mobile Technologies, LLC",1,Credit card,536542,14453313.07,2032141.29,17.8366,0
+2024,2,2,"Curb Mobility, LLC",2,Cash,310580,7134400.36,735.54,17.979,8091
+2024,2,1,"Creative Mobile Technologies, LLC",2,Cash,89334,1948443.21,9.2,16.7098,0
+2024,2,1,"Creative Mobile Technologies, LLC",3,No charge,5458,120491.39,0.0,17.0363,0
+2024,2,1,"Creative Mobile Technologies, LLC",4,Dispute,2944,69518.12,4.89,18.4309,0
+2024,2,2,"Curb Mobility, LLC",4,Dispute,40697,1789.41,1927.99,-0.0026,20350
+2024,2,2,"Curb Mobility, LLC",3,No charge,8632,197.7,197.7,0.0,4314
+2024,3,2,"Curb Mobility, LLC",1,Credit card,1945689,57412636.55,8595793.25,19.3616,31
+2024,3,1,"Creative Mobile Technologies, LLC",1,Credit card,598720,16638306.33,2319842.77,18.527,0
+2024,3,2,"Curb Mobility, LLC",2,Cash,357734,8381992.54,907.97,18.4023,9660
+2024,3,1,"Creative Mobile Technologies, LLC",2,Cash,103504,2316394.28,0.0,17.2259,0
+2024,3,1,"Creative Mobile Technologies, LLC",3,No charge,6437,146029.08,0.0,17.558,0
+2024,3,1,"Creative Mobile Technologies, LLC",4,Dispute,3484,84201.53,0.0,18.8352,0
+2024,3,2,"Curb Mobility, LLC",4,Dispute,50044,2412.39,2579.07,-0.0025,25010
+2024,3,2,"Curb Mobility, LLC",3,No charge,11384,186.85,186.85,0.0,5687
+2024,4,2,"Curb Mobility, LLC",1,Credit card,1908637,57041124.08,8537127.01,19.6365,7
+2024,4,1,"Creative Mobile Technologies, LLC",1,Credit card,596214,16666689.74,2311348.98,18.6854,0
+2024,4,2,"Curb Mobility, LLC",2,Cash,351161,8466604.31,1172.9,18.9906,9800
+2024,4,1,"Creative Mobile Technologies, LLC",2,Cash,102923,2351779.63,18.12,17.6263,0
+2024,4,1,"Creative Mobile Technologies, LLC",3,No charge,6111,141995.73,16.05,18.024,0
+2024,4,1,"Creative Mobile Technologies, LLC",4,Dispute,3272,80287.19,0.0,19.187,0
+2024,4,2,"Curb Mobility, LLC",4,Dispute,48900,2509.65,2497.35,0.0003,24435
+2024,4,2,"Curb Mobility, LLC",3,No charge,10659,138.23,226.37,-0.0072,5325
+2024,5,2,"Curb Mobility, LLC",1,Credit card,2035627,62328025.54,9289099.18,20.2409,10
+2024,5,1,"Creative Mobile Technologies, LLC",1,Credit card,639045,18205019.09,2533858.24,19.1562,0
+2024,5,2,"Curb Mobility, LLC",2,Cash,375488,9156775.11,982.33,19.2561,11024
+2024,5,1,"Creative Mobile Technologies, LLC",2,Cash,110451,2562474.41,21.59,17.9827,0
+2024,5,1,"Creative Mobile Technologies, LLC",3,No charge,6565,153280.56,22.02,18.0781,0
+2024,5,1,"Creative Mobile Technologies, LLC",4,Dispute,3701,96719.32,5.0,20.7817,0
+2024,5,2,"Curb Mobility, LLC",4,Dispute,55260,2592.83,2957.46,-0.005,27611
+2024,5,2,"Curb Mobility, LLC",3,No charge,11631,316.22,418.07,-0.0066,5809
+2024,6,2,"Curb Mobility, LLC",1,Credit card,1924034,58385319.7,8647902.9,20.077,22
+2024,6,1,"Creative Mobile Technologies, LLC",1,Credit card,596360,16867340.79,2344771.88,19.009,0
+2024,6,2,"Curb Mobility, LLC",2,Cash,350807,8395274.37,945.96,18.8882,10879
+2024,6,1,"Creative Mobile Technologies, LLC",2,Cash,103323,2361744.0,13.0,17.6915,0
+2024,6,1,"Creative Mobile Technologies, LLC",3,No charge,6635,154575.3,3.53,18.1736,0
+2024,6,1,"Creative Mobile Technologies, LLC",4,Dispute,3715,98747.35,0.0,21.0001,0
+2024,6,2,"Curb Mobility, LLC",4,Dispute,54786,2368.42,2412.22,-0.0006,27375
+2024,6,2,"Curb Mobility, LLC",3,No charge,11827,246.24,266.54,-0.0014,5904
+2024,7,2,"Curb Mobility, LLC",2,Cash,2,61.55,0.0,23.65,0
+2024,7,2,"Curb Mobility, LLC",1,Credit card,1,22.25,4.45,12.8,0
+2026,6,2,"Curb Mobility, LLC",1,Credit card,2,86.57,14.88,24.0,0
